@@ -12,7 +12,7 @@ using v8::Object;
 using v8::String;
 using v8::Value;
 
-NAN_METHOD(DisableMinimize)
+NAN_METHOD(disableMinimize)
 {
     if (info.Length() >= 2)
     {
@@ -62,7 +62,7 @@ NAN_METHOD(DisableMinimize)
     info.GetReturnValue().Set(obj);
 }
 
-NAN_METHOD(EnableMinimize)
+NAN_METHOD(enableMinimize)
 {
     v8::Local<v8::Object> obj = Nan::New<v8::Object>();
     if (info.Length() > 2)
@@ -112,8 +112,8 @@ NAN_METHOD(EnableMinimize)
 
 NAN_MODULE_INIT(Initialize)
 {
-    NAN_EXPORT(target, DisableMinimize);
-    NAN_EXPORT(target, EnableMinimize);
+    NAN_EXPORT(target, disableMinimize);
+    NAN_EXPORT(target, enableMinimize);
 }
 
 NODE_MODULE(addon, Initialize);

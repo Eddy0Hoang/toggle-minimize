@@ -1,22 +1,37 @@
 {
-  "name": "toggle-minimize",
+  "name": "@eddy_h/toggle-minimize",
   "version": "1.0.0",
   "description": "To disable/enable minimizing by Win+D or show-desktop button, extends from electron-disable-minimize.",
-  "main": "test.js",
+  "main": "./bin/toggle-minimize.node",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node-gyp build",
     "build:dev": "node-gyp build --debug",
     "cfg": "node-gyp configure",
-    "dev": "electron ."
+    "dev": "electron .",
+    "compile": "npm run cfg && npm run build",
+    "install": "node-gyp rebuild"
   },
-  "keywords": ["electron", "windows"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eddy0Hoang/toggle-minimize.git"
+  },
+  "keywords": [
+    "electron",
+    "windows disable minimize"
+  ],
   "author": "Eddy Huang",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "bindings": "^1.5.0",
-    "electron": "^25.6.0",
-    "electron-rebuild": "^3.2.9",
     "nan": "^2.18.0"
-  }
+  },
+  "devDependencies": {
+    "electron": "latest",
+    "electron-rebuild": "^3.2.9"
+  },
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/Eddy0Hoang/toggle-minimize/issues"
+  },
+  "homepage": "https://github.com/Eddy0Hoang/toggle-minimize#readme"
 }
