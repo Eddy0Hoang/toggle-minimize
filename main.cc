@@ -53,9 +53,12 @@ NAN_METHOD(disableMinimize)
         Nan::Set(obj, Nan::New("code").ToLocalChecked(), Nan::False());
         Nan::Set(obj, Nan::New("msg").ToLocalChecked(), Nan::New("\ncould not locate SHELLDLL_DefView\n").ToLocalChecked());
     }
-    else {
+    else
+    {
         SetWindowLongPtr(hwnd, -8, (LONG_PTR)hShellViewWin);
         Nan::Set(obj, Nan::New("code").ToLocalChecked(), Nan::True());
+        auto msg = NULL == originParentHwnd ? "could not locate the parent window" : "";
+        Nan::Set(obj, Nan::New("msg").ToLocalChecked(), Nan::New(msg).ToLocalChecked());
         Nan::Set(obj, Nan::New("handle").ToLocalChecked(), Nan::New<v8::Number>(reinterpret_cast<uintptr_t>(originParentHwnd)));
     }
 
@@ -78,33 +81,45 @@ NAN_METHOD(enableMinimize)
     {
         target = info[0].As<v8::Object>();
     }
-    else {
+    else
+    {
         Nan::Set(obj, Nan::New("code").ToLocalChecked(), Nan::False());
         Nan::Set(obj, Nan::New("msg").ToLocalChecked(), Nan::New("Argument must be a HWND handle!\nPlease use \"BrowserWindow.getNativeWindowHandle();\"\nhttps://electronjs.org/docs/api/browser-window#wingetnativewindowhandle\n").ToLocalChecked());
         info.GetReturnValue().Set(obj);
         return;
     }
 
-    if (!info[1]->IsNumber()) {
+    if (!info[1]->IsNumber())
+    {
         Nan::ThrowTypeError("\n\nparent should be window handle of type Integer\n");
         Nan::Set(obj, Nan::New("code").ToLocalChecked(), Nan::False());
         Nan::Set(obj, Nan::New("msg").ToLocalChecked(), Nan::New("parent should be window handle of type Integer").ToLocalChecked());
         info.GetReturnValue().Set(obj);
         return;
     }
-    unsigned char* bufferData = (unsigned char*)node::Buffer::Data(target);
-    unsigned long handle = *reinterpret_cast<unsigned long*>(bufferData);
+    unsigned char *bufferData = (unsigned char *)node::Buffer::Data(target);
+    unsigned long handle = *reinterpret_cast<unsigned long *>(bufferData);
     HWND targetHwnd = (HWND)handle;
 
-    uintptr_t hwndInt = static_cast<uintptr_t>(info[1]->NumberValue(Nan::GetCurrentContext()).FromJust());
-    HWND parentHwnd = reinterpret_cast<HWND>(hwndInt);
+    HWND parentHwnd;
+    if (info[1] == 0)
+    {
+        parentHwnd = GetDesktopWindow();
+    }
+    else
+    {
+        uintptr_t hwndInt = static_cast<uintptr_t>(info[1]->NumberValue(Nan::GetCurrentContext()).FromJust());
+        parentHwnd = reinterpret_cast<HWND>(hwndInt);
+    }
     SetLastError(0);
     auto res = SetWindowLongPtr(targetHwnd, -8, (LONG_PTR)parentHwnd);
-    if (res == 0) {
+    if (res == 0)
+    {
         Nan::Set(obj, Nan::New("code").ToLocalChecked(), Nan::False());
         Nan::Set(obj, Nan::New("msg").ToLocalChecked(), Nan::New("failed to set window ptr").ToLocalChecked());
     }
-    else {
+    else
+    {
         Nan::Set(obj, Nan::New("code").ToLocalChecked(), Nan::True());
     }
     info.GetReturnValue().Set(obj);
