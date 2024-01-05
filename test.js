@@ -1,5 +1,5 @@
 const { BrowserWindow, app, Menu } = require("electron");
-const binding = require('./bin/toggle-minimize.node')
+const binding = require("./bin/win32-x64-116/toggle-minimize.node");
 
 let parentHandle = 0;
 app.whenReady().then(() => {
@@ -31,6 +31,35 @@ app.whenReady().then(() => {
           console.log("enable res", res);
         },
       },
+      {
+        label: "hook",
+        click: () => {
+          const res = binding.hookMouseMove((val) => {
+            // console.log("val:", val);
+          });
+          const res2 = binding.hookKeyboard((val) => {
+            console.log("kb val", val);
+          });
+          console.log("hook res", res, res2);
+        },
+      },
+      {
+        label: "unhook",
+        click: () => {
+          const res = binding.unhookMouse();
+          const res2 = binding.unhookKeyboard();
+          console.log("unhook res", res, res2);
+        },
+      },
     ])
   );
+});
+
+process.on("uncaughtException", (e) => {
+  console.log("e", e);
+});
+
+app.on("will-quit", () => {
+  binding.unhookMouse();
+  binding.unhookKeyboard();
 });

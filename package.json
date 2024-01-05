@@ -10,8 +10,11 @@
     "build:dev": "node-gyp build --debug",
     "cfg": "node-gyp configure",
     "dev": "electron-rebuild && electron .",
-    "compile": "npm run cfg && npm run build",
-    "install": "node-gyp rebuild"
+    "clean": "rimraf build bin",
+    "compile": "npm run clean && npm run cfg && npm run build",
+    "install": "node-gyp rebuild",
+    "debug": "cross-env DEBUG=electron-rebuild electron-rebuild",
+    "b": "npm run compile && npm run debug"
   },
   "repository": {
     "type": "git",
@@ -28,7 +31,9 @@
   "author": "Eddy Huang",
   "license": "MIT",
   "dependencies": {
-    "nan": "^2.18.0"
+    "cross-env": "^7.0.3",
+    "nan": "^2.18.0",
+    "rimraf": "^5.0.5"
   },
   "devDependencies": {
     "electron": "latest",
